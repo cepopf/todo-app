@@ -4,6 +4,9 @@ import { MdDelete } from "react-icons/md";
 import { AiOutlineDelete } from "react-icons/ai";
 import { FaCheck } from "react-icons/fa6";
 
+function GlassCard({ children }) {
+  return <div className="glass-card">{children}</div>;
+}
 function App() {
   const [isComplete, setIsComplete] = useState(false);
   const [allTodos, setallTodos] = useState([]);
@@ -56,13 +59,13 @@ function App() {
     localStorage.setItem('completedTodos', JSON.stringify(updatedCompletedTodos));
   }
 
-  const handleDeleteCompletedTodo = (index) =>{
-  let reducedCompletedTodos = [...completedTodos];
-  reducedCompletedTodos.splice(index,1);
+  const handleDeleteCompletedTodo = (index) => {
+    let reducedCompletedTodos = [...completedTodos];
+    reducedCompletedTodos.splice(index, 1);
 
-  setCompletedTodos(reducedCompletedTodos);
-  localStorage.setItem('completedTodos', JSON.stringify(reducedCompletedTodos));
-}
+    setCompletedTodos(reducedCompletedTodos);
+    localStorage.setItem('completedTodos', JSON.stringify(reducedCompletedTodos));
+  }
 
 
   useEffect(() => {
@@ -83,57 +86,58 @@ function App() {
     <div className="App">
       <h1>My Todos</h1>
       <div className='todo-wrapper'>
-        <div className='todo-input'>
-          <div className='todo-input-item'>
-            <label>Title</label>
-            <input type='text' value={newTitle} onChange={(e) => setNewTitle(e.target.value)} placeholder="What is the task title?" />
+        <GlassCard>
+          <div className='todo-input' >
+            <div className='todo-input-item'>
+              <label>Title</label>
+              <input className='todo-input-field' type='text' value={newTitle} onChange={(e) => setNewTitle(e.target.value)} placeholder="What is the task title?" />
+            </div>
+            <div className='todo-input-item'>
+              <label>Description</label>
+              <input className='todo-input-field' type='text' value={newDescription} onChange={(e) => setNewDescription(e.target.value)} placeholder="What is the task description?" />
+            </div>
+            <button type='button' onClick={handleAddTodo} className='add-btn'>Add</button>
           </div>
-          <div className='todo-input-item'>
-            <label>Description</label>
-            <input type='text' value={newDescription} onChange={(e) => setNewDescription(e.target.value)} placeholder="What is the task description?" />
+          <div className='btn-area'>
+            <button className={`btn-todo ${isComplete === false && 'active'}`} onClick={() => setIsComplete(false)}>
+              Todo</button>
+            <button className={`btn-complete ${isComplete === true && 'active'}`} onClick={() => setIsComplete(true)}>
+              Complete</button>
           </div>
-          <button type='button' onClick={handleAddTodo} className='add-btn'>Add</button>
-        </div>
-        <div className='btn-area'>
-          <button className={`btn-todo ${isComplete === false && 'active'}`} onClick={() => setIsComplete(false)}>
-            Todo</button>
-          <button className={`btn-complete ${isComplete === true && 'active'}`} onClick={() => setIsComplete(true)}>
-            Complete</button>
-        </div>
-        <div className='todo-list'>
-          {isComplete === false && allTodos.map((item, index) => {
-            return (
-              <div className='todo-item' key={index}>
-                <div>
-                  <h3>{item.title}</h3>
-                  <p>{item.description}</p>
+          <div className='todo-list'>
+            {isComplete === false && allTodos.map((item, index) => {
+              return (
+                <div className='todo-item' key={index}>
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p>{item.description}</p>
+                  </div>
+                  <div>
+                    <AiOutlineDelete className='icon' onClick={() => handleDeleteTodo(index)} title='Delete' />
+                    <FaCheck className='check-icon' onClick={() => handleComplete(index)} title='Complete' />
+                  </div>
                 </div>
-                <div>
-                  <AiOutlineDelete className='icon' onClick={() => handleDeleteTodo(index)} title='Delete' />
-                  <FaCheck className='check-icon' onClick={() => handleComplete(index)} title='Complete' />
-                </div>
-              </div>
-            )
-          })}
+              )
+            })}
 
 
-          {isComplete === true && completedTodos.map((item, index) => {
-            return (
-              <div className='todo-item' key={index}>
-                <div>
-                  <h3>{item.title}</h3>
-                  <p>{item.description}</p>
-                  <p><small>Completed on: {item.completedOn}</small></p>
+            {isComplete === true && completedTodos.map((item, index) => {
+              return (
+                <div className='todo-item' key={index}>
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p>{item.description}</p>
+                    <p><small>Completed on: {item.completedOn}</small></p>
+                  </div>
+                  <div>
+                    <AiOutlineDelete className='icon' onClick={() => handleDeleteCompletedTodo(index)} title='Delete' />
+                  </div>
                 </div>
-                <div>
-                  <AiOutlineDelete className='icon' onClick={() => handleDeleteCompletedTodo(index)} title='Delete' />
-                </div>
-              </div>
-            )
-          })}
+              )
+            })}
 
-        </div>
-
+          </div>
+        </GlassCard>
       </div>
     </div>
   );
